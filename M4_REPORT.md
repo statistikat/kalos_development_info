@@ -6,6 +6,14 @@ Repos: kalos `f500162` · rkalos `00c3a88` (core pin `f500162`) ·
 pykalos `808e01c` (pin `f500162`) · persephone3 `795a571` @ branch `rkalos_backend` (pin rkalos
 `00c3a88`). All commits local; nothing pushed.
 
+## Follow-up qualification on 2026-11-23
+
+The four repositories have published the original M4 commits. The product now exposes RSA3 forward and backward extensions through the same monthly automatic fit that passed the 13-case decision gate. On AirPassengers with three backcasts and six forecasts, the observed original, seasonal and calendar effects matched the public JDemetra outputs within 1e-8. Five forecast point series matched over the requested dates. The installed application parity suite passed 439 of 439 assertions on macOS ARM64. [Persephone component qualification](https://github.com/statistikat/persephone3/commit/1079aa9) · [Forecast implementation and reference checks](https://github.com/statistikat/persephone3/blob/3b2cc14/inst/tinytest/test-native-forecasts.R)
+
+The application also displays the actual X-11 seasonal–irregular ratios, replacement positions and final seasonal factors. Reference checks covered four fixed modes and nonzero-horizon RSA3. The complete Python source-distribution wheel replay passed 102 tests, including 4,353 automatic X-13 checks and 1,287 horizon checks. [Application plot qualification](https://github.com/statistikat/persephone3/commit/3b2cc14) · [Python wheel results](https://github.com/statistikat/pykalos/commit/e6f17e2)
+
+The accepted M4 scope remains monthly RSA3. Fixed-structure X-13 templates RSA0, RSA1 and RSA2c belong to M5b. Calendar-detection templates RSA4 and RSA5c still require item 21-I. The separate TRAMO-SEATS RSA0 route is covered by M5.
+
 ## 1. kalos core — stage Z closed + horizon route (FINAL)
 
 Chain (all local, unpushed): a3bbb4e (driver) → b17ee8d (21-H.2 oracle slice) → b773d27 (CI root-cause
