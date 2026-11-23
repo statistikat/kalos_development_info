@@ -59,3 +59,9 @@ Batched advance to `2b93ab0` (90→102 vendor files); all new TUs compiled; 12/1
 ## 7. Next: M4 (item 21 — automatic preprocessing and selection)
 
 Estimation enters the pipeline (outlier detection, ARIMA identification/selection feeding the already-qualified fixed machinery). First dispatches: Kalos contract-doc touch-up (M4-S0) → item-21 scoping decomposition with the first qualified selection-primitive slice. The restricted-fit path stays untouched and green throughout; when M4's automatic spec exists, the Persephone `"rsa"` templates become the next capability block in the same honest schema.
+
+## Python restricted-fit qualification completed on 2026-11-23
+
+The original M3 checkpoint left the Python binding pending. The public `pykalos.x13_fit` now runs the fixed-coefficient X-13 specification required by the family plan. Its capability record identifies the supported coefficients, filters, trend length and zero horizons. The two captured nonzero-horizon requests returned the expected refusals. [Implementation](https://github.com/statistikat/pykalos/commit/d01652a)
+
+The installed Python wheel replayed 16 complete fits at thread settings 1, 2 and 8. Each replay checked 44,712 table values across both frozen corpora and 1,344 values from the direct `x13_fast` reference. The final components matched their source tables exactly. The full source-archive wheel run passed 96/96 tests on macOS ARM64. The integer-validation correction also passed 71 targeted tests on its rebuilt wheel. This closes the Python deliverable in M3. Cross-platform wheel qualification continues under M6. [Qualification record](https://github.com/statistikat/pykalos/blob/f8233946f157e6e85949736c8bc2d40e2c9ee667/IMPLEMENTATION_STATUS.md)
