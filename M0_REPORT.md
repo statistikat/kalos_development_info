@@ -17,6 +17,9 @@
 
 **Milestone M0 exit gate: conditionally met.** All four repos build and run on Linux; every previously macOS-only claim that could be re-run was re-run. The gate is *not* fully met because 3 standalone + 14 R test files fail from a newly exposed cross-platform numerical issue (Section 3.1) that must be fixed in Kalos core as the **first slice of M1**, before any cross-platform parity claim.
 
+**Closure verified on 2026-11-23.** The M1 integration checkpoint closed the outstanding Linux bootstrap gate. At Kalos `cd004b0`, all 39 CTests passed in serial, OpenMP and sanitizer builds. On the synchronized core, rkalos passed all 270,653 OpenMP assertions and all 270,649 serial assertions. Python passed all three smoke tests and Persephone passed 1,330 assertions. These are the recorded checkpoint results. The original M0 measurements below preserve the evidence that led to the fixes. [M1 integration and validation](M1_REPORT.md#1-executive-summary--exit-gate-met)
+
+
 ---
 
 ## 2. Environment
