@@ -10,4 +10,4 @@
 /tmp_opencode/
 
 # Regenerable package artifact (built from rkalos at a pinned core SHA).
-rkalos_0.1.0.tar.gz
+rkalos_*.tar.gz
