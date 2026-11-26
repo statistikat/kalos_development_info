@@ -1,0 +1,28 @@
+# M9 milestone report — speed: reference comparison and the external-library evaluation
+
+M9 (25–26 November 2026) answered two questions with measurements: where the native engine now stands against the JVM reference on speed, and which proposals in kalos's `EXTERNAL_LIBRARY_EVALUATION.md` survive contact with its own acceptance protocol. No candidate was adopted — this milestone produced the qualification evidence and decision records; adoption is a maintainer call. All work happened in scratch copies with default-off flags; every workspace repository stayed porcelain-clean throughout; no tolerance, expectation or fixture was ever moved. [SLICOT scoping](tmp_opencode/m9-perf/SLICOT-scoping-2026-11-25.md) · [seam qualification](tmp_opencode/m9-perf/seam/SEAM-QUALIFICATION-2026-11-25.md) · [R-boundary gate](tmp_opencode/m9-perf/seam-r/RQUAL-2026-11-25.md) · [gap analysis](tmp_opencode/m9-perf/gapanalysis/GAP-ANALYSIS-2026-11-25.md) · [starts](tmp_opencode/m9-perf/evals/STARTS-QUALIFICATION-2026-11-25.md) · [LM widening](tmp_opencode/m9-perf/lmext/LMBLOCK-QUALIFICATION-2026-11-25.md)
+
+## The comparison, refreshed on matched current HEADs
+
+The stock pipelines are won: RSA0 TRAMO fits measure **2.3–3.1× faster than JDemetra+** (bit-exact products on both sides), and plain AR/MA/ARMA fits are 1.5–3× ahead. The recorded 2026-11-13 "50×" ARMA-matrix deficit is partly host (17× on this Xeon-VM) and now fully decomposed where it survives: for seasonal-differenced ML estimation the 64× closes as **8.6× evaluation count × ~83× cost-per-evaluation × 0.11 scope dilution**, with JVM memoization ruled out by bytecode inspection and interleaved-input designs. The cost-per-evaluation factor is structural: the reference concentrates the likelihood on a stationary differenced representation (~130 µs/eval) while kalos runs the exact time-varying diffuse filter (~10.8 ms/eval) — the filter being also where the fit-time mass sits (71% diffuse, 28% stationary init, 1% optimizer, from 300-sample stack attribution under a gdb-parent sampler, `perf` being kernel-blocked here).
+
+## Decision records per evaluation-doc candidate
+
+| candidate | disposition | evidence |
+|---|---|---|
+| **SLICOT SB03MD** for stationary init | **cleared for adoption with conditions** | prototype seam: flag-off byte-identical at source/object/build-tree level; ctest 96/96 both states; sweeps byte-identical; cancellation 13/13 incl. Schur-window reuse; ASan/UBSan clean; **fit matrix −17.7 %** mean (−19…−28 % seasonal shapes), airline −26…−27 % in the native lane; R-boundary gate PASSES with margin — worst coefficient deviation 4.87284416e-07 vs OFF 4.87286739e-07 (ON strictly lower), all 1517 fit-matrix checks and ~310k tinytest assertions byte-identical per-file in both lanes. Conditions: m≤4 size gate (µs-level regressions there), explicit status mapping (`INFO=N+1` proven), provider pinning, and the unresolved packaging question of libgfortran + SLICOT vendoring on macOS/Windows. |
+| **RhysU/ar Burg starts** | **subsumed — not needed** | the core already ships a qualified Hannan–Rissanen start; measured effect of starts alone is modest (airline 1.29–1.68×) and the external header would duplicate internal machinery. Recorded as the option-B opt-in proposal instead. |
+| **dlib BOBYQA / LBFGS++** | **rejected with evidence** | the optimizer loop itself is 1.0% of fit time (sampling table); the doc's own small-parameter-count caveat is now measured, not assumed. |
+| **CTSA / StatsForecast** | **not pursued** | their one relevant capability (Hannan–Rissanen init) already exists internally, qualified and pinned. |
+
+## The real product lever found: LM eligibility widening (option D)
+
+Extending the **already-pinned** Levenberg–Marquardt solver's fixed-block eligibility (no new solver, no new math) measured **airline 2.4–3.4×** (11–12 evals vs 85–86, matching the JVM's 10–17 band) and **mixed 1.32–1.82×**, with 8/8 pinned-matrix cases landing inside budget by ≥5 orders of magnitude, zero decision flips, all widened landings ≤7 ulp from the BFGS surface, and mixed-route gated throws becoming in-budget landings. It supersedes the starts+seam combination wherever it applies (the LM route does not run the diffuse stationary init), leaving SLICOT's value on the general/BFGS routes and the fit matrix. Its qualification also caught, via the pinned replay, a prototype transcription defect before it could be adopted — the archived pre-fix artifacts document the catch.
+
+## Carried forward for maintainer decision
+
+1. **Adopt option D** as a product slice (spec in §9 of the LM report, incl. a named regression test from the audit catch).
+2. **Adopt the SLICOT seam** under its conditions, or adopt D first and keep SLICOT queued for the BFGS-route/fit-matrix gain.
+3. **Proposed roadmap item 29** — diffuse-filter representation work (steady-state / differenced-stationary path inside the protected filter): the only lever addressing the ~83× cost-per-evaluation factor and the 71% time mass; it touches the statistical contract itself and must open with its own probe/ledger slice. Not started, by design.
+4. **Correctness follow-up (independent of M9 outcomes)**: `initial_unavailable` estimation results leak the process's last-computed log-likelihood instead of NaN (pristine-reproducible; small fix + pinning test).
+5. One honest contract datum for any solver/start change: a synthetic near-unit-root shape can land at a *better* likelihood under a different start (+1.19 nats) — fit quality is basin-dependent; pinned corpora prefer neither, and the report documents why that argument bounds the risk.
